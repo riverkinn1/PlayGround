@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#183829" />
+  <title>Moonroot Farm — Day & Night</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">✿</div><div><div class="eyebrow">A LITTLE FARM, A BIG NIGHT</div><h1>Moonroot <span>Farm</span></h1></div></div>
+      <div class="day-card"><span class="sun-icon" id="phaseIcon">☀</span><div><small id="phaseLabel">DAYTIME</small><strong id="dayLabel">Day 1 <i>·</i> Spring</strong></div></div>
+      <div class="resources">
+        <div class="resource"><span class="resource-icon coin">¢</span><div><small>GOLD</small><strong id="goldLabel">24</strong></div></div>
+        <div class="resource"><span class="resource-icon seed">✿</span><div><small>SEEDS</small><strong id="seedLabel">5</strong></div></div>
+        <div class="resource heart-resource"><span class="resource-icon heart">♥</span><div><small>BARN</small><strong id="hpLabel">10 / 10</strong></div></div>
+      </div>
+    </header>
+
+    <section class="play-area">
+      <div class="scene-wrap">
+        <div class="scene-heading"><div><span class="live-dot"></span><span id="sceneTitle">A bright new morning</span></div><div class="weather"><span>☁</span> Soft clouds <b>·</b> 18°</div></div>
+        <div class="canvas-frame"><canvas id="game" width="960" height="576" aria-label="Moonroot Farm game board"></canvas><div class="canvas-tip" id="canvasTip">WASD to walk <b>·</b> Space to use tool <b>·</b> Click a tile to work</div></div>
+      </div>
+      <aside class="side-panel">
+        <section class="panel-card task-card"><div class="section-label">TODAY'S PLAN <span>✦</span></div><h2 id="missionTitle">Plant the first seeds</h2><p id="missionText">Till a patch, plant seeds, and give them a drink before dusk.</p><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div class="progress-caption"><span id="progressText">0 / 3 crops</span><span id="phaseCountdown">DUSK IN 60s</span></div></section>
+        <section class="panel-card tools-card"><div class="section-label">YOUR TOOLBELT <span>1 — 5</span></div><div class="tool-grid" id="toolGrid"></div><div class="tool-hint" id="toolHint">Choose a tile and press Space, or click it.</div></section>
+        <section class="panel-card night-card"><div class="section-label">AFTER DARK <span>☾</span></div><div class="night-info"><div class="tower-illustration">⌂<span>✦</span></div><div><strong>Keep the barn safe</strong><p>Build a sprout turret on the grass. It guards the path automatically.</p></div></div><div class="night-stats"><span>WAVE <b id="waveLabel">1</b></span><span>THREATS <b id="enemyLabel">0</b></span></div></section>
+        <button class="primary-button" id="phaseButton"><span>☀</span> Finish the day <kbd>Enter</kbd></button>
+        <div class="save-note"><span>✿</span> Your little farm saves automatically</div>
+      </aside>
+    </section>
+    <footer class="footer"><span><b>MOONROOT FARM</b> <i>—</i> grow by day, guard by night</span><span>Tip: watering crops each morning makes them grow faster.</span></footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal-backdrop" id="modal" hidden><div class="modal-card"><div class="modal-icon" id="modalIcon">✦</div><p class="eyebrow" id="modalEyebrow">NIGHT CLEARED</p><h2 id="modalTitle">The barn is safe!</h2><p id="modalText">The first wave is behind you. The farm wakes with the sun.</p><button class="primary-button" id="modalButton">Welcome the morning <span>→</span></button></div></div>
+  <script src="game.js"></script>
+</body>
+</html>
