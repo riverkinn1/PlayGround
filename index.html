@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#16251b" />
+  <title>Moonrise Farm — Farm by Day, Defend by Night</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231c3526'/%3E%3Cpath d='M32 8 41 26 60 32 41 38 32 58 23 38 4 32 23 26Z' fill='%23f1cf6c'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%23f7e6ae'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <div id="app" class="app phase-day">
+    <div class="game-shell" id="gameShell">
+      <canvas id="game" width="1280" height="720" aria-label="Moonrise Farm game world"></canvas>
+      <div class="canvas-grain" aria-hidden="true"></div>
+      <div class="canvas-vignette" aria-hidden="true"></div>
+
+      <div class="hud" id="hud">
+        <header class="topbar">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true">✦</span>
+            <span class="brand-text">Moonrise Farm</span>
+          </div>
+
+          <section class="day-card" aria-live="polite">
+            <div class="day-card-top">
+              <span class="phase-name" id="phaseName">Day 1</span>
+              <span class="phase-icon" id="phaseIcon">☀</span>
+            </div>
+            <div class="clock" id="clock">6:00 AM</div>
+            <div class="time-track"><div class="time-fill" id="timeFill"></div></div>
+            <div class="objective" id="objective">Tend the soil before nightfall</div>
+          </section>
+
+          <div class="top-right">
+            <div class="resource coin-pill" title="Gold">
+              <span class="coin-icon" aria-hidden="true"></span>
+              <span id="gold">140</span>
+            </div>
+            <div class="resource heart-pill" title="Farmhouse health">
+              <span class="heart-icon" aria-hidden="true">♥</span>
+              <div class="heart-copy"><span id="hpText">20 / 20</span><div class="hp-track"><div id="hpFill"></div></div></div>
+            </div>
+            <button class="round-btn" id="helpBtn" aria-label="How to play" title="How to play">?</button>
+            <button class="round-btn" id="muteBtn" aria-label="Mute sound" title="Mute sound">♪</button>
+          </div>
+        </header>
+
+        <div class="context-strip" id="contextStrip">
+          <span class="context-dot"></span>
+          <span id="hintText">Click the field to till, plant, and water. Watered crops grow while you defend.</span>
+        </div>
+
+        <footer class="bottombar">
+          <section class="panel seeds-panel" id="seedsPanel">
+            <div class="panel-heading"><span>Seed Satchel</span><span class="mini-key">1 – 4</span></div>
+            <div class="card-row" id="seedRow">
+              <button class="seed-card selected" data-seed="turnip" aria-label="Select turnip seeds">
+                <span class="card-key">1</span>
+                <span class="seed-art turnip" aria-hidden="true">🌱</span>
+                <span class="card-name">Turnip</span>
+                <span class="card-price">8g · 1d</span>
+              </button>
+              <button class="seed-card" data-seed="strawberry" aria-label="Select strawberry seeds">
+                <span class="card-key">2</span>
+                <span class="seed-art strawberry" aria-hidden="true">🍓</span>
+                <span class="card-name">Berry</span>
+                <span class="card-price">22g · 2d</span>
+              </button>
+              <button class="seed-card" data-seed="pumpkin" aria-label="Select pumpkin seeds">
+                <span class="card-key">3</span>
+                <span class="seed-art pumpkin" aria-hidden="true">🎃</span>
+                <span class="card-name">Pumpkin</span>
+                <span class="card-price">40g · 3d</span>
+              </button>
+              <button class="seed-card" data-seed="sunflower" aria-label="Select sunflower seeds">
+                <span class="card-key">4</span>
+                <span class="seed-art sunflower" aria-hidden="true">🌻</span>
+                <span class="card-name">Sunflower</span>
+                <span class="card-price">30g · 2d</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="panel towers-panel" id="towersPanel">
+            <div class="panel-heading"><span id="buildHeading">Yard Defenses</span><span class="mini-key">Click card, then place</span></div>
+            <div class="card-row" id="towerRow">
+              <button class="tower-card" data-tower="scarecrow" aria-label="Build scarecrow archer">
+                <span class="tower-art scarecrow" aria-hidden="true">➶</span>
+                <span class="card-name">Scarecrow</span>
+                <span class="card-price">70g</span>
+              </button>
+              <button class="tower-card" data-tower="beehive" aria-label="Build beehive">
+                <span class="tower-art beehive" aria-hidden="true">⬡</span>
+                <span class="card-name">Beehive</span>
+                <span class="card-price">85g</span>
+              </button>
+              <button class="tower-card" data-tower="sprinkler" aria-label="Build sprinkler">
+                <span class="tower-art sprinkler" aria-hidden="true">💧</span>
+                <span class="card-name">Sprinkler</span>
+                <span class="card-price">110g</span>
+              </button>
+              <button class="tower-card" data-tower="moonlily" aria-label="Build moon lily">
+                <span class="tower-art moonlily" aria-hidden="true">✦</span>
+                <span class="card-name">Moon Lily</span>
+                <span class="card-price">150g</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="panel action-panel">
+            <div class="night-badge" id="nightBadge">
+              <span class="wave-label">WAVE</span>
+              <span id="waveText">—</span>
+            </div>
+            <button class="sunburst-btn" id="sunburstBtn" title="Sunburst (Space)">
+              <span class="sun-icon">☼</span>
+              <span><b>Sunburst</b><small id="sunburstText">Ready · Space</small></span>
+            </button>
+            <button class="primary-btn" id="mainAction">
+              <span class="moon-mini">☾</span>
+              <span><b>Sleep till Dusk</b><small id="actionSub">Let the crops grow</small></span>
+            </button>
+            <button class="repair-btn" id="repairBtn" title="Repair the farmhouse">
+              <span>🔨</span><span>Repair <b id="repairCost">20g</b></span>
+            </button>
+          </section>
+        </footer>
+      </div>
+
+      <div class="banner" id="banner" aria-live="assertive">
+        <div class="banner-kicker" id="bannerKicker">Night falls</div>
+        <div class="banner-title" id="bannerTitle">Defend the farm</div>
+        <div class="banner-rule"></div>
+        <div class="banner-sub" id="bannerSub">The crows smell the harvest</div>
+      </div>
+
+      <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+      <div class="modal-screen title-screen" id="titleScreen">
+        <div class="title-glow"></div>
+        <div class="title-inner">
+          <div class="eyebrow"><span></span> A cozy harvest defense <span></span></div>
+          <h1>Moonrise<br><em>Farm</em></h1>
+          <p class="tagline">Grow a little. Gather a lot.<br>Then keep the dark from your door.</p>
+          <button class="play-btn" id="playBtn"><span>Play</span><span class="play-arrow">→</span></button>
+          <div class="title-controls">
+            <span><b>Click</b> the field to farm</span>
+            <span><b>Build</b> defenses before dusk</span>
+            <span><b>Survive</b> five moonlit nights</span>
+          </div>
+          <p class="title-footnote">A tiny farm sim &amp; tower defense tale, grown from scratch.</p>
+        </div>
+        <div class="title-moon" aria-hidden="true"></div>
+      </div>
+
+      <div class="modal-screen help-screen hidden" id="helpScreen">
+        <div class="parchment">
+          <button class="close-btn" id="helpClose" aria-label="Close help">×</button>
+          <div class="parchment-kicker">Farmer's Almanac</div>
+          <h2>How to keep the farm</h2>
+          <div class="help-grid">
+            <div class="help-item"><span class="help-num">01</span><h3>Tend by day</h3><p>Click a plot to till it. Click again to sow your selected seed, then once more to water. Ripe crops glow — click to harvest.</p></div>
+            <div class="help-item"><span class="help-num">02</span><h3>Build before dusk</h3><p>Choose a tower card, then click open grass. Towers fire on their own. Click a placed tower to upgrade it; right-click to sell.</p></div>
+            <div class="help-item"><span class="help-num">03</span><h3>Hold the night</h3><p>Click enemies to fling stones. Press <b>Space</b> for Sunburst. Every night survived makes the next one stranger.</p></div>
+          </div>
+          <div class="help-keys">
+            <span><kbd>1</kbd>–<kbd>4</kbd> seeds</span>
+            <span><kbd>Q</kbd>/<kbd>E</kbd> cycle seeds</span>
+            <span><kbd>Space</kbd> sunburst</span>
+            <span><kbd>Esc</kbd> cancel / pause</span>
+            <span><kbd>M</kbd> mute</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-screen end-screen hidden" id="endScreen">
+        <div class="end-card">
+          <div class="end-kicker" id="endKicker">The farm endures</div>
+          <h2 id="endTitle">Dawn breaks</h2>
+          <p id="endText">Five nights survived. The harvest is safe.</p>
+          <div class="end-stats" id="endStats"></div>
+          <button class="play-btn small" id="restartBtn"><span>Play Again</span><span class="play-arrow">→</span></button>
+        </div>
+      </div>
+
+      <div class="pause-screen hidden" id="pauseScreen">
+        <div class="pause-card">
+          <div class="parchment-kicker">A moment's rest</div>
+          <h2>Paused</h2>
+          <p>The chickens will wait. Probably.</p>
+          <button class="primary-btn wide" id="resumeBtn">Resume</button>
+          <button class="text-btn" id="pauseHelpBtn">How to play</button>
+        </div>
+      </div>
+
+      <div class="rotate-note">Turn your device sideways for the full farm view.</div>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
